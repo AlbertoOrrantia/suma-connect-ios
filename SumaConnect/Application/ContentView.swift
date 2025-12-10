@@ -8,11 +8,16 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var session = SessionViewModel()
     var body: some View {
-        VStack {
-            Text("Hello, world!")
+        Group {
+            if session.isAuthenticated {
+                HomeView()
+                    .environmentObject(session)
+            } else {
+                LoginView(viewModel: LoginViewModel(session: session))
+            }
         }
-        .padding()
     }
 }
 
