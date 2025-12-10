@@ -8,14 +8,19 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var session = SessionViewModel()
+    @EnvironmentObject var session: SessionViewModel
     var body: some View {
         Group {
             if session.isAuthenticated {
-                HomeView()
-                    .environmentObject(session)
+                NavigationStack {
+                    HomeView()
+                        .navigationBarBackButtonHidden(true)
+                }
             } else {
-                LoginView(viewModel: LoginViewModel(session: session))
+                NavigationStack {
+                    LoginView(viewModel: LoginViewModel(session: session))
+                        .navigationBarBackButtonHidden(true)
+                }
             }
         }
     }
@@ -23,4 +28,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(SessionViewModel())
 }
