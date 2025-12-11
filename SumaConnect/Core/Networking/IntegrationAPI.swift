@@ -9,7 +9,12 @@ import Foundation
 
 enum IntegrationAPI {
     // Local Vapor backend
-    private static let baseURL = "http://127.0.0.1:8080"
+    
+    // Low security risk, for development and MVP purposes, having a private LAN IP poses NO external risk as its not publicly routable
+    // Development TODO: Please change  to you local IP, please ensure this to be able to connect with physical devices.
+    // Trade Off: In production we will use a secure domain such as https://api.example.com
+    
+    private static let baseURL = "http://192.168.0.40:8080"
     
     // MARK: - Endpoints
     
