@@ -16,6 +16,8 @@ extension Color {
         static let pinkRed = Color("SumaPinkRed")
         static let lightBlue = Color("SumaLightBlue")
         static let errorRed = Color("SumaErrorRed")
+        static let gray = Color("SumaGray")
+        static let darkGray = Color("SumaDarkGray")
     }
     
 }

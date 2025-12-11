@@ -13,7 +13,7 @@ struct LoginView: View {
     
     var body: some View {
         ZStack {
-            Color.Suma.red
+            Color.Suma.darkGray
                 .ignoresSafeArea()
             
             VStack(spacing: 28) {
@@ -26,7 +26,7 @@ struct LoginView: View {
                     } label: {
                         Text("Crear cuenta")
                             .font(.subheadline.weight(.semibold))
-                            .foregroundColor(Color.Suma.white)
+                            .foregroundColor(Color.Suma.red)
                             .underline(true)
                     }
                     .padding(.trailing, 20)
@@ -36,20 +36,14 @@ struct LoginView: View {
                 Spacer(minLength: 4)
                 
                 // Placeholder Logo, MVP will only include title
-                VStack(spacing: -4) {
-                    Text("Suma")
-                    Text("Connect")
-                }
-                .font(.largeTitle.bold())
-                .foregroundColor(Color.Suma.white)
-                .shadow(color: .black.opacity(0.65), radius: 6, y: 3)
-                .padding(.top, 40)
+                SumaTitle(fontSize: 44, style: .stacked)
+                    .padding(.top, 50)
                 
                 // MARK: - Input Fields
                 VStack(alignment: .leading, spacing: 16) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Correo electrónico")
-                            .foregroundColor(Color.Suma.white)
+                            .foregroundColor(Color.Suma.darkBlue)
                             .font(.subheadline)
                             .padding(.leading, 5)
                         
@@ -57,7 +51,7 @@ struct LoginView: View {
                             "",
                             text: $viewModel.email,
                             prompt: Text("tucorreo@ejemplo.com")
-                                .foregroundColor(.gray.opacity(0.8))
+                                .foregroundColor(Color.Suma.darkGray.opacity(0.45))
                         )
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
@@ -67,7 +61,7 @@ struct LoginView: View {
                     
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Contraseña")
-                            .foregroundColor(Color.Suma.white)
+                            .foregroundColor(Color.Suma.darkBlue)
                             .font(.subheadline)
                             .padding(.leading, 5)
                         
@@ -77,15 +71,15 @@ struct LoginView: View {
                                     TextField(
                                         "",
                                         text: $viewModel.password,
-                                        prompt: Text("******")
-                                            .foregroundColor(.gray.opacity(0.8))
+                                        prompt: Text("*********")
+                                            .foregroundColor(Color.Suma.darkBlue.opacity(0.45))
                                     )
                                 } else {
                                     SecureField(
                                         "",
                                         text: $viewModel.password,
-                                        prompt: Text("******")
-                                            .foregroundColor(.gray.opacity(0.8))
+                                        prompt: Text("*********")
+                                            .foregroundColor(Color.Suma.darkBlue.opacity(0.45))
                                     )
                                 }
                             }
@@ -95,7 +89,7 @@ struct LoginView: View {
                             
                             Button { showPassword.toggle() } label: {
                                 Image(systemName: showPassword ? "eye" : "eye.slash")
-                                    .foregroundColor(Color.Suma.white)
+                                    .foregroundColor(Color.Suma.darkBlue)
                             }
                             .padding(.trailing, 16)
                         }
@@ -106,7 +100,7 @@ struct LoginView: View {
                 
                 if let error = viewModel.errorMessage {
                     Text(error)
-                        .foregroundColor(Color.Suma.white)
+                        .foregroundColor(Color.Suma.errorRed)
                         .font(.footnote)
                         .padding(.top, -8)
                         .multilineTextAlignment(.center)
@@ -133,17 +127,22 @@ struct LoginView: View {
                             } else {
                                 Text("Iniciar sesión")
                                     .font(.headline)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(.white)
                                     .minimumScaleFactor(0.8)
                             }
                         }
                         .frame(maxWidth: .infinity, minHeight: 50)
                         .background(
                             viewModel.canSubmit
-                            ? Color.Suma.yellow
-                            : Color.Suma.yellow.opacity(0.4)
+                            ? Color.Suma.red
+                            : Color.Suma.red.opacity(0.4)
                         )
                         .clipShape(Capsule())
+                        .overlay(
+                            Capsule()
+                                .stroke(Color.Suma.darkBlue, lineWidth: 2)
+                        )
+                        
                     }
                     .disabled(!viewModel.canSubmit || viewModel.isLoading)
                     .opacity(viewModel.canSubmit ? 1 : 0.6)
@@ -187,15 +186,15 @@ struct SumaInputStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.system(size: 15))
-            .foregroundColor(Color.Suma.white)
-            .tint(Color.Suma.white)
+            .foregroundColor(Color.Suma.darkBlue)
+            .tint(Color.Suma.darkBlue)
             .padding()
             .frame(minHeight: 48)
-            .background(Color.Suma.white.opacity(0.10))
+            .background(Color.Suma.white)
             .cornerRadius(12)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(hasError ? Color.Suma.errorRed : Color.Suma.white.opacity(0.3), lineWidth: 1)
+                    .stroke(hasError ? Color.Suma.errorRed : Color.Suma.darkBlue.opacity(0.35), lineWidth: 1)
             )
     }
 }
