@@ -30,9 +30,8 @@ struct HomeView: View {
                     }
                 }
             }
-            .onAppear {
-                // For MVP purposes we will mock data and simulate latency of 0.7 sec, simulating a real connection time
-                viewModel.loadIntegrations()
+            .task {
+                await viewModel.loadIntegrations()
             }
         }
 

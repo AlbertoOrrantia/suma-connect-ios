@@ -14,6 +14,12 @@ struct SumaConnectApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(session)
+                .onOpenURL { url in
+                    print("\(url)")
+                    if url.host == "auth-success" {
+                        NotificationCenter.default.post(name: NSNotification.Name("RefreshHome"), object: nil)
+                    }
+                }
         }
     }
 }

@@ -73,6 +73,10 @@ final class CharlieEngine {
             }
         }
         
+        if lower.contains("meet") || lower.contains("google meet") {
+            return.connectIntegration("google-meet")
+        }
+        
         return .unknown
     }
     
