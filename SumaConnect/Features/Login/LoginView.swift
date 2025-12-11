@@ -139,10 +139,6 @@ struct LoginView: View {
                             : Color.Suma.red.opacity(0.4)
                         )
                         .clipShape(Capsule())
-                        .overlay(
-                            Capsule()
-                                .stroke(Color.Suma.darkBlue, lineWidth: 2)
-                        )
                         
                     }
                     .disabled(!viewModel.canSubmit || viewModel.isLoading)

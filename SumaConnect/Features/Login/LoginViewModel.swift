@@ -16,6 +16,9 @@ final class LoginViewModel: ObservableObject {
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var errorMessage: String?
     
+    // Dependencies
+    private let integrationService = IntegrationService()
+    
     // Simple validation for the login button, if no email and password are available, it will not let the user click
     var canSubmit: Bool {
         email.isValidEmail && !password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -34,15 +37,31 @@ final class LoginViewModel: ObservableObject {
         let cleanEmail = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         let cleanPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // Simulated API response latency of 1 sec, will help for animations
-        try? await Task.sleep(for: .seconds(1))
-        
         // For MVP purposes we will have hardcoded credentials
         if cleanEmail == "demo@suma.com" && cleanPassword == "password" {
-            session.startSession(userId: "demo", userName: "Demo User")
+            
+            // SMOKE TEST: Verify backend connectivity before granting session
+            do {
+                let userId = "demo"
+                let userName = "Demo User"
+                
+                // Call backend to fetch user data (serving as a connectivity check)
+                _ = try await integrationService.fetchUserIntegrations(userId: userId)
+                
+                // Login Success
+                session.startSession(userId: userId, userName: userName)
+                
+            } catch {
+                print("Login Error: \(error)")
+                errorMessage = "No se pudo conectar con el servidor. Verifica que el backend esté corriendo."
+            }
+            
         } else {
+            // Failure path retains a small delay for UX
+            try? await Task.sleep(for: .seconds(1))
             errorMessage = "Credenciales inválidas"
         }
+        
         isLoading = false
         
     }
@@ -63,6 +82,6 @@ private extension String {
         }
         
         let allowedDomains = ["gmail.com", "outlook.com", "hotmail.com", "suma.com"]
-        return  allowedDomains.contains(String(parts[1]))
+        return allowedDomains.contains(String(parts[1]))
     }
 }
