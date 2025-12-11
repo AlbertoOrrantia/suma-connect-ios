@@ -21,12 +21,9 @@ final class LoginViewModel: ObservableObject {
         email.isValidEmail && !password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
-    private let session: SessionViewModel
-    init(session: SessionViewModel) {
-        self.session = session
-    }
+    init() {}
     
-    func login() async {
+    func login(with session: SessionViewModel) async {
         guard email.isValidEmail else {
             errorMessage = "Ingresa un correo válido"
             return

@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct LoginView: View {
-    @ObservedObject var viewModel: LoginViewModel
+    @EnvironmentObject var session: SessionViewModel
+    @StateObject private var viewModel = LoginViewModel()
     @State private var showPassword = false
     
     var body: some View {
@@ -118,7 +119,7 @@ struct LoginView: View {
                             from: nil,
                             for: nil
                         )
-                        Task { await viewModel.login() }
+                        Task { await viewModel.login(with: session) }
                     } label: {
                         ZStack {
                             if viewModel.isLoading {
@@ -176,7 +177,8 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(viewModel: LoginViewModel(session: SessionViewModel()))
+    LoginView()
+        .environmentObject(SessionViewModel())
 }
 
 // Input ViewModifier; for MVP purposes it will be residing here, componetiztion and modularization will be polished after MVP

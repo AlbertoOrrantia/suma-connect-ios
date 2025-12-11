@@ -12,17 +12,15 @@ struct ContentView: View {
     var body: some View {
         Group {
             if session.isAuthenticated {
-                NavigationStack {
-                    HomeView()
-                        .navigationBarBackButtonHidden(true)
-                }
+                MainTabView()
+                    .transition(.opacity)
+
             } else {
-                NavigationStack {
-                    LoginView(viewModel: LoginViewModel(session: session))
-                        .navigationBarBackButtonHidden(true)
-                }
+                LoginView()
+                    .transition(.opacity)
             }
         }
+        .animation(.easeInOut, value: session.isAuthenticated)
     }
 }
 
