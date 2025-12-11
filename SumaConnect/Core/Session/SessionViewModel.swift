@@ -36,6 +36,7 @@ final class SessionViewModel: ObservableObject {
             self.isAuthenticated = true
         }
     }
+    
     // MARK: - Session Control
     func startSession(userId: String, userName: String?) {
         self.userId = userId

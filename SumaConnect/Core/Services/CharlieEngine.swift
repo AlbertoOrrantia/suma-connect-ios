@@ -12,7 +12,7 @@ final class CharlieEngine {
     
     // MVP Integrations
     private let supportedIntegrations = [
-        "gmail", 
+        "gmail",
         "google-calendar",
         "google-meet"
     ]
@@ -33,8 +33,8 @@ final class CharlieEngine {
     //MARK: - Intent Parsing
     func parseIntent(from text: String, pendingIntegrationId: String?) -> CharlieIntent {
         let lower = text.lowercased()
-        let actionKeywords = [
-            "conecta", "conectar", 
+        let connectKeywords = [
+            "conecta", "conectar",
             "agrega", "agregar",
             "vincula", "vincular",
             "enlaza", "enlazar",
@@ -42,8 +42,21 @@ final class CharlieEngine {
             "linkea", "linkear"
         ]
         
-        func mentionsAction() -> Bool {
-            actionKeywords.contains { lower.contains($0) }
+        let disconnectKeywords = [
+            "desconecta", "desconectar",
+            "quita", "quitar",
+            "desvincula", "desvincular",
+            "elimina", "eliminar",
+            "borra", "borrar"
+        ]
+        
+        // Helper function for symmetry, though technically unused as check is implicitly done below
+        func isConnect() -> Bool {
+            connectKeywords.contains { lower.contains($0) }
+        }
+        
+        func isDisconnect() -> Bool {
+            disconnectKeywords.contains { lower.contains($0) }
         }
         
         //Confirmation
@@ -57,26 +70,21 @@ final class CharlieEngine {
         }
         
         // For MVP purposes, if integration is mentioned it will assume the users wants to connect it
+        // Here we can add new ones
         if lower.contains("gmail") {
-            if mentionsAction() {
-                return .connectIntegration("gmail")
-            } else {
-                return .connectIntegration("gmail")
-            }
+            if isDisconnect() { return .disconnectIntegration("gmail") }
+            return .connectIntegration("gmail")
         }
         
         if lower.contains("calendar") || lower.contains("calendario") {
-            if mentionsAction() {
-                return .connectIntegration("google-calendar")
-            } else {
-                return .connectIntegration("google-calendar")
-            }
+            if isDisconnect() { return .disconnectIntegration("google-calendar") }
+            return .connectIntegration("google-calendar")
         }
         
-        if lower.contains("meet") || lower.contains("google meet") {
-            return.connectIntegration("google-meet")
+        if lower.contains("meet") {
+            if isDisconnect() { return .disconnectIntegration("google-meet") }
+            return .connectIntegration("google-meet")
         }
-        
         return .unknown
     }
     
@@ -86,9 +94,12 @@ final class CharlieEngine {
         case .connectIntegration(let id):
             let name = displayName(for: id)
             return "Claro, puedo ayudarte a conectar \(name) ¿Deseas continuar?"
+        case .disconnectIntegration(let id):
+            let name = displayName(for: id)
+            return "Entiendo, voy a desconectar \(name) ¿Estás seguro?"
         case .confirmConnection(let id):
             let name = displayName(for: id)
-            return "Perfecto, voy a iniciar la conexión con \(name)"
+            return "Perfecto, procesando tu solicitud para \(name)..."
         case .declineConnection(let id):
             let name = displayName(for: id)
             return "Entiendo, por el momento no voy a intentar conectarme a \(name). Puedes reintentarlo cuando quieras"
@@ -119,6 +130,7 @@ final class CharlieEngine {
 // MVP intents for Charlie
 enum CharlieIntent {
     case connectIntegration(String)
+    case disconnectIntegration(String)
     case confirmConnection(String)
     case declineConnection(String)
     case unknown
