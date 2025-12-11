@@ -40,6 +40,14 @@ struct MainTabView: View {
             .tabItem {
                 Label("Charlie", systemImage: "bubble.left.and.bubble.right.fill")
             }
+            
+            NavigationStack {
+                SettingsView()
+                    .toolbar(.hidden, for: .navigationBar)
+            }
+            .tabItem {
+                Label("Ajustes", systemImage: "gearshape.fill")
+            }
         }
         .accentColor(Color.Suma.lightBlue)
     }
